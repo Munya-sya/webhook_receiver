@@ -1,1 +1,1 @@
-web: python webhook_receiver.py
+gunicorn web_receiver:app
