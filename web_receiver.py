@@ -20,14 +20,21 @@ def webhook():
     # Log the entire data content
     app.logger.info(f"Received data: {data}")
 
-    # Extract action and other details (assuming TradingView sends a JSON formatted message)
-    action = data.get('action')
-    symbol = data.get('symbol', 'EURUSD')  # Default to EURUSD if not provided
-    lots = float(data.get('lots', 0.1))    # Default to 0.1 lots if not provided
+    # Extract relevant information from the data
+    # Adjust these keys according to what TradingView sends
+    action = data.get('strategy.order.action')
+    symbol = data.get('ticker', 'EURUSD')  # Default to EURUSD if not provided
+    contracts = data.get('strategy.order.contracts', '0')
+    position_size = data.get('strategy.position_size', '0')
 
     # Log the received data and add to signals list
-    print(f"Received Signal: Action={action}, Symbol={symbol}, Lots={lots}")
-    signals.append({"action": action, "symbol": symbol, "lots": lots})
+    print(f"Received Signal: Action={action}, Symbol={symbol}, Contracts={contracts}, Position Size={position_size}")
+    signals.append({
+        "action": action,
+        "symbol": symbol,
+        "contracts": contracts,
+        "position_size": position_size
+    })
 
     # Respond to TradingView
     return jsonify({"status": "success", "message": "Signal received"}), 200
